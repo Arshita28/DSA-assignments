@@ -27,8 +27,6 @@ public:
         return '\0'; // return null char if empty
     }
 };
-
-// ---------------- Main Function ----------------
 int main() {
     char str[MAX];
     cout << "Enter a string: ";
@@ -51,4 +49,5 @@ int main() {
 
     return 0;
 }
+
 
