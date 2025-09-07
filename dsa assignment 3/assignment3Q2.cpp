@@ -24,7 +24,7 @@ public:
         if (!isEmpty()) {
             return arr[top--];
         }
-        return '\0'; // return null char if empty
+        return '\0'; 
     }
 };
 int main() {
@@ -49,5 +49,6 @@ int main() {
 
     return 0;
 }
+
 
 
