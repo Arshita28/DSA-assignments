@@ -1,49 +1,61 @@
 #include <iostream>
 using namespace std;
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
 
-void radix(int arr[], int size, int exp)
-{
-    int res[100];
-    int Count[10] = {0};
-
-    for (int i = 0; i < size; i++)
-        Count[(arr[i] / exp) % 10]++;
-
-    for (int i = 1; i < 10; i++)
-        Count[i] += Count[i - 1];
-
-    for (int i = size - 1; i >= 0; i--)
-    {
-        int digit = (arr[i] / exp) % 10;
-        res[Count[digit] - 1] = arr[i];
-        Count[digit]--;
+    Node(int val) {
+        data = val;
+        left = right = NULL;
     }
+};
 
-    for (int i = 0; i < size; i++)
-        arr[i] = res[i];
+// Pre-order Traversal:
+void preorder(Node* root) {
+    if (root == NULL) return;
+
+    cout << root->data << " ";
+    preorder(root->left);
+    preorder(root->right);
 }
 
-int main()
-{
-    int n;
-    cout << "ENTER NUMBER OF ELEMENTS: ";
-    cin >> n;
+// In-order Traversal: 
+void inorder(Node* root) {
+    if (root == NULL) return;
 
-    int arr[100];
-    int largest = 0;
+    inorder(root->left);
+    cout << root->data << " ";
+    inorder(root->right);
+}
 
-    for (int i = 0; i < n; i++)
-    {
-        cin >> arr[i];
-        if (arr[i] > largest)
-            largest = arr[i];
-    }
+// Post-order Traversal: 
+void postorder(Node* root) {
+    if (root == NULL) return;
 
-    for (int exp = 1; largest / exp > 0; exp = exp * 10)
-        radix(arr, n, exp);
+    postorder(root->left);
+    postorder(root->right);
+    cout << root->data << " ";
+}
 
-    for (int i = 0; i < n; i++)
-        cout << arr[i] << " ";
+int main() {
+    Node* root = new Node(1);
+    root->left = new Node(2);
+    root->right = new Node(3);
+    root->left->left = new Node(4);
+    root->left->right = new Node(5);
+
+    cout << "Pre-order Traversal: ";
+    preorder(root);
+    cout << endl;
+
+    cout << "In-order Traversal: ";
+    inorder(root);
+    cout << endl;
+
+    cout << "Post-order Traversal: ";
+    postorder(root);
+    cout << endl;
 
     return 0;
 }
