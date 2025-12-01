@@ -1,147 +1,45 @@
 #include <iostream>
+#include <limits.h>
 using namespace std;
-class Node
-{
-public:
-    Node *left;
-    Node *right;
+
+// Structure for each node of the tree
+struct Node {
     int data;
-    Node(int d)
-    {
-        left = NULL;
-        right = NULL;
-        data = d;
+    Node* left;
+    Node* right;
+
+    Node(int value) {
+        data = value;
+        left = right = NULL;
     }
 };
-Node *insert(Node *root, int d)
-{
+bool isBST(Node* root, int minVal, int maxVal) {
     if (root == NULL)
-    {
-        root = new Node(d);
-        return root;
-    }
-    if (root->data > d)
-    {
-        root->left = insert(root->left, d);
-    }
-    else if (root->data < d)
-    {
-        root->right = insert(root->right, d);
-    }
+        return true;
+
+    if (root->data <= minVal || root->data >= maxVal)
+        return false;
+
+    return isBST(root->left, minVal, root->data) &&
+           isBST(root->right, root->data, maxVal);
+}
+
+bool checkBST(Node* root) {
+    return isBST(root, INT_MIN, INT_MAX);
+}
+
+int main() {
+    // Example Tree
+    Node* root = new Node(10);
+    root->left = new Node(5);
+    root->right = new Node(15);
+    root->right->left = new Node(12);
+    root->right->right = new Node(20);
+
+    if (checkBST(root))
+        cout << "This tree is a BST\n";
     else
-        cout << "Cannot insert duplicates"<<endl;
-    return root;
-}
-void input(Node *&root)
-{
-    int d;
-    cout << "Enter data: ";
-    cin >> d;
-    while (d != -1)
-    {
-        root = insert(root, d);
-        cin >> d;
-    }
-}
+        cout << "This tree is NOT a BST\n";
 
-Node *min(Node *root)
-{
-    while (root->left != NULL)
-    {
-        root = root->left;
-    }
-    return root;
-}
-
-Node *del(Node *&root, int key)
-{
-    if (root == NULL)
-    {
-        return NULL;
-    }
-    if (key < root->data)
-    {
-        root->left = del(root->left, key);
-    }
-    else if (key > root->data)
-    {
-        root->right = del(root->right, key);
-    }
-    else
-    {
-        if (root->left == NULL && root->right == NULL)
-        {
-            delete root;
-            return NULL;
-        }
-        else if (root->left == NULL)
-        {
-            Node *temp = root->right;
-            delete root;
-            return temp;
-        }
-        else if (root->right == NULL)
-        {
-            Node *temp = root->left;
-            delete root;
-            return temp;
-        }
-        else
-        {
-            Node *successor = min(root->right);
-            root->data = successor->data;
-            root->right = del(root->right, successor->data);
-        }
-    }
-    return root;
-}
-
-int maxdepth(Node *root)
-{
-    if (root == NULL)
-        return -1;
-    int leftd = maxdepth(root->left);
-    int rightd = maxdepth(root->right);
-    return 1 + max(leftd, rightd);
-}
-
-int minDepth(Node *root)
-{
-    if (root == NULL)
-        return -1;
-
-    if (root->left == NULL)
-        return 1 + minDepth(root->right);
-
-    if (root->right == NULL)
-        return 1 + minDepth(root->left);
-
-    return 1 + min(minDepth(root->left), minDepth(root->right));
-}
-
-void inorder(Node *&root)
-{
-    if (root == NULL)
-        return;
-    inorder(root->left);
-    cout << root->data << " ";
-    inorder(root->right);
-}
-
-int main()
-{
-    Node *root = NULL;
-    input(root);
-    cout << "Printing Inorder Traversal "<<endl;
-    inorder(root);
-    cout << "Max depth of BST" << maxdepth(root)<<endl;
-    cout << "Min depth of BST" << minDepth(root)<<endl;
-    int node;
-    cout << "Enter node to delete:"<<endl;
-    cin >> node;
-    root = del(root, node);
-    cout << "After deletion: "<<endl;
-    inorder(root);
-    cout << endl;
     return 0;
 }
